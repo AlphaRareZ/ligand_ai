@@ -1,4 +1,4 @@
-export default  function FooterColumn({ title, items }) {
+export default  function FooterColumn({ title, items }:{title:string,items:{label:string, link:string}[]}) {
   return (
     <div>
       <h3 className="text-lg font-bold mb-4 uppercase">{title}</h3>

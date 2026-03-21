@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDna } from "@fortawesome/free-solid-svg-icons";
 
-export default function Logo({ className }) {
+export default function Logo({ className = "" }) {
   return (
     <div className={`${className}`}>
       <a href="#">

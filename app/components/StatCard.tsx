@@ -1,4 +1,4 @@
-export default  function StatCard({title, value, color, subtitle}) {
+export default  function StatCard({title, value, color, subtitle} :{title:string, value:string, color:string, subtitle:string}) {
     return (
         <div className="flex flex-col gap-2 items-center">
             <h3 className="text-[#94a3b3]">{title}</h3>

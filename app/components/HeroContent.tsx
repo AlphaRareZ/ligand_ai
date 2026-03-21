@@ -29,7 +29,7 @@ export default  function HeroContent() {
 
       {/* ضفنا flex-wrap عشان لو الشاشة صغيرة جداً الزراير تنزل تحت بعض بشياكة */}
       <div className="flex flex-wrap gap-4 mt-4">
-        <Button padding="px-8 py-4" hover={"hover:scale-105"}>
+        <Button >
           Start Discovery
         </Button>
         <Button 

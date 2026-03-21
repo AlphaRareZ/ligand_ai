@@ -1,4 +1,4 @@
-export default  function SectionCard({ icon, title, description }) {
+export default  function SectionCard({ icon, title, description }:{icon:React.ElementType, title:string, description:string}) {
   const IconComponent = icon;
   return (
     <div className="p-8 border border-[#364153] rounded-3xl bg-[#0f1625] flex flex-col gap-6">

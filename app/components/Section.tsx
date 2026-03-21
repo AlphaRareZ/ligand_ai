@@ -1,4 +1,4 @@
-export default function Section({ title, description, children, hasBorder = false }) {
+export default function Section({ title, description, children, hasBorder = false }:{title:string, description:string, children:React.ReactNode, hasBorder?: boolean}) {
   return (
     // أزلنا px-64 واستخدمنا الـ Container الموحد
     <div className={`w-full ${hasBorder ? "border-b border-[#1e293b]" : ""}`}>

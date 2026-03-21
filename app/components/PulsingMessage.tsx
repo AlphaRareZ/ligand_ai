@@ -1,4 +1,6 @@
-export default  function PulsingMessage({ children }) {
+import { ReactNode } from "react";
+
+export default  function PulsingMessage({ children }:{children:ReactNode}) {
   return (
     // Pulsing dot with text
     <div className="flex gap-4 items-center bg-[#101b34] text-[#1152d4] size-fit rounded-full px-4 py-1 w-max relative border-[#0f2553] border-2">
