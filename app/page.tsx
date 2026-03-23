@@ -4,7 +4,7 @@ import Hero from "./components/Hero";
 import { DnaIcon, Brain, FlaskConical } from "lucide-react";
 import SectionCard from "./components/SectionCard";
 import ResearchCard from "./components/ResearchCard";
-import StatsSection from "./components/statsSection";
+import StatsSection from "./components/StatsSection";
 import SectionGrid from "./components/SectionGrid";
 import Section from "./components/Section";
 import CTASection from "./components/CTASection"; 
@@ -15,8 +15,8 @@ const icons = {
 };
 export default function Home() {
   return (
-    <main className="bg-[#101622] text-white h-full">
-      <Header />
+    <main className="">
+      {/* <Header /> */}
       <Hero />
       <StatsSection />
       {/* How it Works Section */}
@@ -69,7 +69,7 @@ export default function Home() {
       </Section>
       {/* CTA Section */}
       <CTASection />
-      <Footer />
+      {/* <Footer /> */}
     </main>
   );
 }

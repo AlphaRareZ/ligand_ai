@@ -1,5 +1,8 @@
 import Logo from "../components/Logo";
 import NavBar from "./NavBar";
+{/*
+  
+  */}
 export default function Header() {
   return (
     // Header يأخذ العرض بالكامل مع خلفية

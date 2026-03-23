@@ -50,28 +50,31 @@ export default function Footer() {
   return (
     <footer className="w-full bg-[#101622]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
         {/* Grid متجاوب: 1 للموبايل -> 2 للتابلت -> 4 للديسكتوب */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 py-16 gap-12 border-b border-gray-700">
           <FooterInfo />
-          {
-            footerData.map((col, idx) => (
-              <FooterColumn key={idx} title={col.title} items={col.items} />
-            ))
-          }
+          {footerData.map((col, idx) => (
+            <FooterColumn key={idx} title={col.title} items={col.items} />
+          ))}
         </div>
 
         {/* الجزء السفلي: تحت بعض في الموبايل، وجنب بعض في الشاشات الكبيرة */}
         <div className="pt-8 pb-12 text-sm text-gray-500 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-center md:text-left">
-            &copy; {new Date().getFullYear()} Ligand AI Therapeutics Inc. All rights reserved.
+            &copy; {2026} Ligand AI Therapeutics Inc. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-white transition-colors"><Share2Icon size={20} /></a>
-            <a href="mailto:dodo1003pro@gmail.com" className="hover:text-white transition-colors"><Mail size={20} /></a>
+            <a href="#" className="hover:text-white transition-colors">
+              <Share2Icon size={20} />
+            </a>
+            <a
+              href="mailto:dodo1003pro@gmail.com"
+              className="hover:text-white transition-colors"
+            >
+              <Mail size={20} />
+            </a>
           </div>
         </div>
-        
       </div>
     </footer>
   );
