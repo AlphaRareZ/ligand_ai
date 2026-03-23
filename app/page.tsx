@@ -1,5 +1,3 @@
-import Footer from "./common/Footer";
-import Header from "./common/Header";
 import Hero from "./components/Hero";
 import { DnaIcon, Brain, FlaskConical } from "lucide-react";
 import SectionCard from "./components/SectionCard";
