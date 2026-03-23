@@ -2,7 +2,7 @@ import Hero from "./components/Hero";
 import { DnaIcon, Brain, FlaskConical } from "lucide-react";
 import SectionCard from "./components/SectionCard";
 import ResearchCard from "./components/ResearchCard";
-import StatsSection from "./components/StatsSection";
+import StatsSection from "./components/statsSection";
 import SectionGrid from "./components/SectionGrid";
 import Section from "./components/Section";
 import CTASection from "./components/CTASection"; 
