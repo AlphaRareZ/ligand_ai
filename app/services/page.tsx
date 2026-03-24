@@ -9,7 +9,7 @@ export default function Services() {
       <div className="hidden lg:block absolute -top-40 -right-40 h-125 w-125 bg-blue-600/20 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="hidden lg:block absolute bottom-0 -left-40 h-125 w-125 bg-green-600/20 rounded-full blur-[120px] pointer-events-none"></div>
 
-      <div className="max-w-7xl mx-auto py-16 z-10">
+      <div className="max-w-7xl mx-auto py-16 z-10 relative">
         <PageStartingContent>
           <PulsingMessage>Next-Gen Oncology Solutions</PulsingMessage>
           <HeadingContent
@@ -20,6 +20,9 @@ export default function Services() {
           ></HeadingContent>
           <div className="h-0.5 w-35 bg-[#94a3b8]"></div>
         </PageStartingContent>
+        <div className="flex flex-col md:flex-row">
+          <div className=""></div>
+        </div>
       </div>
     </div>
   );

@@ -57,11 +57,13 @@ export type ColorKey = keyof typeof colors;
 export default function HowItWorks() {
   return (
     <div className="w-full bg-[#101622] text-white md:px-6 lg:px-8 overflow-hidden relative">
+      <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[url('data:image/svg+xml,%3Csvg%20width=%2260%22%20height=%2260%22%20viewBox=%220%200%2060%2060%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cpath%20d=%22M30%200l25.98%2015v30L30%2060%204.02%2045V15z%22%20fill-rule=%22evenodd%22%20stroke=%22%23ffffff%22%20fill=%22none%22/%3E%3C/svg%3E')] bg-size-[80px_80px] bg-repeat"></div>
+
       <div className="hidden lg:block absolute -top-40 -right-40 h-125 w-125 bg-blue-600/20 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="hidden lg:block absolute bottom-200 -left-40 h-125 w-125 bg-green-600/20 rounded-full blur-[120px] pointer-events-none"></div>
 
       {/* Heading Content */}
-      <div className="z-10 max-w-7xl mx-auto py-16 ">
+      <div className="z-10 max-w-7xl mx-auto py-16 relative">
         <PageStartingContent>
           <PulsingMessage>The Synthetic Oracle Workflow</PulsingMessage>
           <HeadingContent
