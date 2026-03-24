@@ -28,20 +28,24 @@ const footerData = [
     title: "Menu",
     items: [
       {
+        label: "Home",
+        link: "/",
+      },
+      {
         label: "Services",
-        link: "#",
+        link: "/services",
       },
       {
         label: "Research",
-        link: "#",
+        link: "/research",
       },
       {
         label: "How It Works",
-        link: "#",
+        link: "/how-it-works",
       },
       {
         label: "About Us",
-        link: "#",
+        link: "/about-us",
       },
     ],
   },
@@ -51,7 +55,7 @@ export default function Footer() {
     <footer className="w-full bg-[#101622]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Grid متجاوب: 1 للموبايل -> 2 للتابلت -> 4 للديسكتوب */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 py-16 gap-12 border-b border-gray-700">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  gap-12 border-b border-gray-700  py-16">
           <FooterInfo />
           {footerData.map((col, idx) => (
             <FooterColumn key={idx} title={col.title} items={col.items} />
@@ -68,7 +72,7 @@ export default function Footer() {
               <Share2Icon size={20} />
             </a>
             <a
-              href="mailto:dodo1003pro@gmail.com"
+              href="mailto:@gmail.com"
               className="hover:text-white transition-colors"
             >
               <Mail size={20} />
