@@ -52,7 +52,7 @@ const footerData = [
 ];
 export default function Footer() {
   return (
-    <footer className="w-full bg-[#101622]">
+    <footer className="w-full bg-[#101622] ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Grid متجاوب: 1 للموبايل -> 2 للتابلت -> 4 للديسكتوب */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  gap-12 border-b border-gray-700  py-16">

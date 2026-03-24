@@ -16,7 +16,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Ligand AI - Revolutionizing AML Drug Discovery with AI & RNA-Seq",
-  description: "Ligand AI leverages advanced generative models and precision RNA sequencing to identify novel therapeutic targets and small molecules for Acute Myeloid Leukemia.",
+  description:
+    "Ligand AI leverages advanced generative models and precision RNA sequencing to identify novel therapeutic targets and small molecules for Acute Myeloid Leukemia.",
 };
 
 export default function RootLayout({
@@ -30,10 +31,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#101622] text-white h-full">
-        <Header/>
-        {children}
-        <Footer/>
-        </body>
+        <Header />
+        <main className="grow">{children}</main>
+        <Footer />
+      </body>
     </html>
   );
 }

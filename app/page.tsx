@@ -5,7 +5,7 @@ import ResearchCard from "./components/ResearchCard";
 import StatsSection from "./components/statsSection";
 import SectionGrid from "./components/SectionGrid";
 import Section from "./components/Section";
-import CTASection from "./components/CTASection"; 
+import CTASection from "./components/CTASection";
 const icons = {
   dna: DnaIcon,
   brain: Brain,
@@ -13,7 +13,9 @@ const icons = {
 };
 export default function Home() {
   return (
-    <main className="">
+    <main className="relative w-full overflow-hidden">
+      <div className="hidden lg:block absolute -top-40 -right-40 h-125 w-125 bg-blue-600/20 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="hidden lg:block absolute bottom-0 -left-40 h-125 w-125 bg-green-600/20 rounded-full blur-[120px] pointer-events-none"></div>
       {/* <Header /> */}
       <Hero />
       <StatsSection />

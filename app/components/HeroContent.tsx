@@ -1,7 +1,7 @@
 import Button from "./Button";
 import { HeadingContent } from "./HeadingContent";
 import PulsingMessage from "./PulsingMessage";
-
+import Link from "next/link";
 export default function HeroContent() {
   return (
     // قللنا الـ gap لـ 8 (32px) في الموبايل، و 12 (48px) في الديسكتوب
@@ -38,7 +38,10 @@ export default function HeroContent() {
           variant="ghost"
           className="border-gray-600 border hover:bg-[#364153] transition-colors"
         >
+          <Link href="/how-it-works">
           View Pipeline
+
+          </Link>
         </Button>
       </div>
     </div>

@@ -10,6 +10,10 @@ import {
   BadgeCheck,
   Zap,
 } from "lucide-react";
+import { PageStartingContent } from "../components/PageStartingContent";
+import { CardWithBackground } from "./CardWithBackground";
+import { HowItWorksCardFooter } from "./HowItWorksCardFooter";
+import { HowItWorksCard } from "./HowItWorksCard";
 const data = [
   [
     {
@@ -42,20 +46,23 @@ const data = [
     },
   ],
 ];
-const colors = {
+export const colors = {
   blue: "text-[#3b82f6]",
   orange: "text-[#f59e0b]",
   green: "text-[#10b981]",
   purple: "text-[#c084fc]",
   red: "text-[#ef4444]",
 };
-type ColorKey = keyof typeof colors;
+export type ColorKey = keyof typeof colors;
 export default function HowItWorks() {
   return (
-    <div className="w-full bg-[#101622] text-white md:px-6 lg:px-8">
+    <div className="w-full bg-[#101622] text-white md:px-6 lg:px-8 overflow-hidden relative">
+      <div className="hidden lg:block absolute -top-40 -right-40 h-125 w-125 bg-blue-600/20 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="hidden lg:block absolute bottom-200 -left-40 h-125 w-125 bg-green-600/20 rounded-full blur-[120px] pointer-events-none"></div>
+
       {/* Heading Content */}
-      <div className="max-w-7xl mx-auto py-16 ">
-        <div className="flex flex-col gap-4 items-center mb-8 md:mb-16 lg:mb-32">
+      <div className="z-10 max-w-7xl mx-auto py-16 ">
+        <PageStartingContent>
           <PulsingMessage>The Synthetic Oracle Workflow</PulsingMessage>
           <HeadingContent
             heading="From Raw Data to"
@@ -63,7 +70,8 @@ export default function HowItWorks() {
             description="Our multi-phase algorithmic process leverages generative intelligence and structural biology to accelerate drug discovery with unprecedented precision."
             className="flex flex-col items-center text-center gap-6 max-w-fit"
           ></HeadingContent>
-        </div>
+        </PageStartingContent>
+
         <div className="flex flex-col px-4 gap-12 ">
           {/* First Card */}
           <HowItWorksCard
@@ -155,95 +163,6 @@ export default function HowItWorks() {
           <CTASection></CTASection>
         </div>
       </div>
-    </div>
-  );
-}
-
-function HowItWorksCard({
-  hasBg,
-  isReversed,
-  color,
-  phase,
-  heading,
-  description,
-  imgSrc,
-  children,
-}: {
-  hasBg?: boolean;
-  isReversed?: boolean;
-  color: ColorKey;
-  phase?: string;
-  heading?: string;
-  description?: string;
-  imgSrc?: string;
-  footerData?: { icon: any; text: string }[];
-  children?: React.ReactNode;
-}) {
-  const bgColor = hasBg ? "bg-[#131b2b]" : "transparent";
-  return (
-    <div
-      className={`flex flex-col md:flex-row gap-18  p-4 md:px-12 md:py-18 rounded-4xl ${bgColor} ${isReversed ? "md:flex-row-reverse" : ""}`}
-    >
-      {/* Info */}
-      <div className="flex flex-col gap-4 md:w-1/2">
-        <h3 className={`uppercase ${colors[color]} font-bold tracking-wide`}>
-          {phase}{" "}
-        </h3>
-        <h2 className={`font-bold text-4xl mb-4`}>{heading}</h2>
-        <p className="tracking-wider text-[#94a3b8] mb-4">{description}</p>
-        {/* Icon and Text */}
-        {children}
-      </div>
-      {/* Image */}
-      <div className="w-full md:w-1/2 ">
-        <div className="w-full h-64 md:h-90 ">
-          <img
-            src={imgSrc}
-            alt=""
-            className={`w-full h-full object-cover rounded-2xl `}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-function HowItWorksCardFooter({
-  data,
-  textColor,
-}: {
-  data: { icon: any; text: string }[];
-  textColor?: string;
-}) {
-  return (
-    <div className="flex flex-col gap-4">
-      {data.map((item, index) => (
-        <div key={index} className="flex flex-row gap-4">
-          <item.icon size={24} className={textColor} />
-          <p className="text-[#cbd5d5] font-semibold tracking-wide">
-            {item.text}
-          </p>
-        </div>
-      ))}
-    </div>
-  );
-}
-function CardWithBackground({
-  title,
-  description,
-  bg,
-  border,
-}: {
-  title: string;
-  description: string;
-  bg?: string;
-  border?: string;
-}) {
-  return (
-    <div
-      className={`${bg || "bg-[#1e2129]"} border ${border || "border-[#332e25]"} p-4 w-full rounded-xl`}
-    >
-      <h1 className={`text-2xl font-semibold ${colors["orange"]}`}>{title}</h1>
-      <p className="font-mono text-[#94a3b8] uppercase">{description}</p>
     </div>
   );
 }
