@@ -182,7 +182,7 @@ function HowItWorksCard({
   const bgColor = hasBg ? "bg-[#131b2b]" : "transparent";
   return (
     <div
-      className={`flex flex-col md:flex-row gap-18  p-2 md:px-12 md:py-18 rounded-4xl ${bgColor} ${isReversed ? "md:flex-row-reverse" : ""}`}
+      className={`flex flex-col md:flex-row gap-18  p-4 md:px-12 md:py-18 rounded-4xl ${bgColor} ${isReversed ? "md:flex-row-reverse" : ""}`}
     >
       {/* Info */}
       <div className="flex flex-col gap-4 md:w-1/2">
