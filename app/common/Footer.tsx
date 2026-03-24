@@ -11,7 +11,7 @@ const footerData = [
       },
       {
         label: "Phone",
-        link: "tel:+1234567890",
+        link: "tel:+201005400750",
       },
     ],
   },

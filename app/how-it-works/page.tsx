@@ -52,7 +52,7 @@ const colors = {
 type ColorKey = keyof typeof colors;
 export default function HowItWorks() {
   return (
-    <div className="w-full bg-[#101622] text-white px-4 md:px-6 lg:px-8">
+    <div className="w-full bg-[#101622] text-white md:px-6 lg:px-8">
       {/* Heading Content */}
       <div className="max-w-7xl mx-auto py-16 ">
         <div className="flex flex-col gap-4 items-center mb-8 md:mb-16 lg:mb-32">
@@ -182,7 +182,7 @@ function HowItWorksCard({
   const bgColor = hasBg ? "bg-[#131b2b]" : "transparent";
   return (
     <div
-      className={`flex flex-col md:flex-row gap-18  p-4 md:px-12 md:py-18 rounded-4xl ${bgColor} ${isReversed ? "md:flex-row-reverse" : ""}`}
+      className={`flex flex-col md:flex-row gap-18  p-2 md:px-12 md:py-18 rounded-4xl ${bgColor} ${isReversed ? "md:flex-row-reverse" : ""}`}
     >
       {/* Info */}
       <div className="flex flex-col gap-4 md:w-1/2">
