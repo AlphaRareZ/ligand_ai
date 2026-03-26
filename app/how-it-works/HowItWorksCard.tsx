@@ -1,3 +1,4 @@
+import { CardBody } from "../components/CardBody";
 import { ColorKey, colors } from "./page";
 
 export function HowItWorksCard({
@@ -30,8 +31,7 @@ export function HowItWorksCard({
         <h3 className={`uppercase ${colors[color]} font-bold tracking-wide`}>
           {phase}{" "}
         </h3>
-        <h2 className={`font-bold text-4xl mb-4`}>{heading}</h2>
-        <p className="tracking-wider text-[#94a3b8] mb-4">{description}</p>
+        <CardBody heading={heading} description={description} />
         {/* Icon and Text */}
         {children}
       </div>
