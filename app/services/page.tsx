@@ -4,6 +4,7 @@ import { PageStartingContent } from "../components/PageStartingContent";
 import { CardBody } from "../components/CardBody";
 import { Atom, Dna } from "lucide-react";
 import Button from "../components/Button";
+import React from "react";
 const content = [
   {
     primaryColor: "blue",
@@ -21,7 +22,7 @@ const content = [
     imgSrc: "service2.png",
     icon: "atom",
   },
-];
+] as const;
 const COLORS = {
   blue: "#1152d4",
   green: "#0fb17b",
@@ -171,7 +172,7 @@ function ServiceCard({
     </div>
   );
 }
-function Features({ children }: { children: string }) {
+function Features({ children }: { children: React.ReactNode }) {
   return <div className="flex flex-col md:flex-row gap-4">{children}</div>;
 }
 function FeatureCard({
@@ -192,51 +193,6 @@ function FeatureCard({
         {title}
       </h3>
       <p className=" font-medium tracking-wide">{description}</p>
-    </div>
-  );
-}
-function StatsCard() {
-  return (
-    // 1. The outer container needs a background (like an image, pattern, or gradient)
-    // so the blur actually has something to blur.
-    <div className="w-full min-h-[400px] flex items-center justify-center p-8 bg-slate-950">
-      {/* 2. The Glassmorphism Card */}
-      <div
-        className="w-full max-w-5xl p-8 flex flex-col md:flex-row justify-between items-center gap-8 rounded-2xl 
-                      bg-[#131b2b]/60 backdrop-blur-md border border-white/5 shadow-2xl"
-      >
-        {/* Left Content */}
-        <div className="max-w-2xl">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Unmatched Precision Oncology
-          </h2>
-          <p className="text-slate-400 text-lg leading-relaxed">
-            Our algorithms are trained on over 500TB of clinical and molecular
-            data, providing verified insights that reduce lead optimization time
-            by 65%.
-          </p>
-        </div>
-
-        {/* Right Stats */}
-        <div className="flex gap-12 text-white">
-          <div className="flex flex-col">
-            <span className="text-5xl font-black tracking-tight mb-1">
-              99.8%
-            </span>
-            <span className="text-xs font-bold text-slate-300 tracking-wider uppercase">
-              In-Silico Accuracy
-            </span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-5xl font-black tracking-tight mb-1">
-              12ms
-            </span>
-            <span className="text-xs font-bold text-slate-300 tracking-wider uppercase">
-              Inference Speed
-            </span>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

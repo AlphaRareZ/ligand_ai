@@ -31,7 +31,7 @@ export function HowItWorksCard({
         <h3 className={`uppercase ${colors[color]} font-bold tracking-wide`}>
           {phase}{" "}
         </h3>
-        <CardBody heading={heading} description={description} />
+        <CardBody heading={heading!} description={description!} />
         {/* Icon and Text */}
         {children}
       </div>
