@@ -24,10 +24,10 @@ export default function Button({
   size = "md",
   className = "",
   children,
+  onClick,
   ...props
 }: ButtonProps) {
   // <-- 3. We attach the blueprint to the component here
-
   const base =
     "inline-flex items-center justify-center rounded-md font-semibold transition duration-200 cursor-pointer";
 
@@ -48,7 +48,7 @@ export default function Button({
   };
 
   return (
-    <button
+    <button onClick={onClick}
       className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >

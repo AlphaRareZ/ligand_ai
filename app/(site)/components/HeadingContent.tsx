@@ -12,7 +12,7 @@ export function HeadingContent({
   return (
     <div className={className}>
       <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-white">
-        {heading + " "} {/* الكلمة الملونة بنحطها في span مش h1 تاني */}
+        {heading + " "}
         <span className="text-[#1152d4]">{bluePart}</span>
       </h1>
 

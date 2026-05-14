@@ -6,13 +6,13 @@ export default function Logo({ className = "" }) {
   return (
     <div className={`${className}`}>
       <Link href="/">
-        <h1 className="text-xl md:text-2xl font-bold flex items-center gap-4 shrink-0">
+        <div className="text-xl md:text-2xl font-bold flex items-center gap-4 shrink-0">
           <div className="p-4 bg-[#0f1b37] rounded-xl">
           <FontAwesomeIcon icon={faDna} className="w-4 h-4 md:h-6 md:w-6 text-[#1152d4]" />
 
           </div>
-          Ligand AI
-        </h1>
+          <h1>AML<sub className="mx-1">2</sub>Ligand</h1>
+        </div>
       </Link>
     </div>
   );
