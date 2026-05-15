@@ -5,10 +5,10 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
-        destination: 'http://76.13.15.132:5015/api/:path*', // Proxy to Backend
+        source: "/api/:path*",
+        destination: "https://auth.aml2ligand.online/api/:path*", // Proxy to Backend
       },
-    ]
+    ];
   },
 };
 
