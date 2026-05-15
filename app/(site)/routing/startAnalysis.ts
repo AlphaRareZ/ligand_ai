@@ -4,17 +4,15 @@ export async function startAnalysis(
     router: AppRouterInstance,
     SetIsLoading?: (val: boolean) => void,
 ) {
+    const baseUrl = process.env.NEXT_PUBLIC_AUTH_URL;
     try {
         if (SetIsLoading) SetIsLoading(true); // ابدأ الـ Loading هنا
 
         // 1. جرب تجيب بيانات اليوزر
-        const meResponse = await fetch(
-            "https://auth.aml2ligand.online/api/auth/me",
-            {
-                method: "GET",
-                credentials: "include",
-            },
-        );
+        const meResponse = await fetch(`${baseUrl}/me`, {
+            method: "GET",
+            credentials: "include",
+        });
 
         if (meResponse.ok) {
             router.replace("/lab"); // استخدم replace بدل push عشان الـ Back button
@@ -22,13 +20,10 @@ export async function startAnalysis(
         }
 
         // 2. لو مفيش، جرب الـ Refresh
-        const refreshResponse = await fetch(
-            "https://auth.aml2ligand.online/api/auth/refresh",
-            {
-                method: "POST",
-                credentials: "include",
-            },
-        );
+        const refreshResponse = await fetch(`${baseUrl}/refresh`, {
+            method: "POST",
+            credentials: "include",
+        });
 
         if (refreshResponse.ok) {
             router.replace("/lab");
