@@ -33,7 +33,7 @@ export default function SignInPage() {
     setErrorMsg('');
 
     try {
-      const response = await fetch('http://76.13.15.132:5015/api/auth/login', {
+      const response = await fetch('https://auth.aml2ligand.online/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials:"include",

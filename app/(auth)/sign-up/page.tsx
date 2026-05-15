@@ -39,7 +39,7 @@ export default function SignUpPage() {
     setErrorMsg('');
 
     try {
-      const response = await fetch('http://76.13.15.132:5015/api/auth/register', {
+      const response = await fetch('https://auth.aml2ligand.online/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
