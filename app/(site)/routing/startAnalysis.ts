@@ -2,11 +2,12 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 
 export async function startAnalysis(
     router: AppRouterInstance,
-    SetIsLoading?: (val: boolean) => void,
+    setIsLoading?: (val: boolean) => void,
 ) {
     const baseUrl = process.env.NEXT_PUBLIC_AUTH_URL;
+    
     try {
-        if (SetIsLoading) SetIsLoading(true); // ابدأ الـ Loading هنا
+        if (setIsLoading) setIsLoading(true);
 
         // 1. جرب تجيب بيانات اليوزر
         const meResponse = await fetch(`${baseUrl}/me`, {
@@ -15,8 +16,8 @@ export async function startAnalysis(
         });
 
         if (meResponse.ok) {
-            router.replace("/lab"); // استخدم replace بدل push عشان الـ Back button
-            return;
+            await router.replace("/lab");
+            return; // اخرج فوراً ومتخليش الـ Loading يقفل عشان ملمحش الصفحة القديمة
         }
 
         // 2. لو مفيش، جرب الـ Refresh
@@ -26,17 +27,17 @@ export async function startAnalysis(
         });
 
         if (refreshResponse.ok) {
-            router.replace("/lab");
+            await router.replace("/lab");
             return;
         }
 
         // 3. لو كله فشل، روح للـ Sign in
-        router.replace("/sign-in");
+        await router.replace("/sign-in");
+        if (setIsLoading) setIsLoading(false); // اقفل الـ loading لو خلاص مفيش نقل وهيقف في الـ sign-in
+
     } catch (error) {
         console.error("Routing error:", error);
-        router.replace("/sign-in");
-    } finally {
-        // لو مش هتعمل Redirect، اقفل الـ Loading
-        // بس بما إننا بنعمل Redirect في كل الحالات، الصفحة الجديدة هي اللي هتحمل
+        await router.replace("/sign-in");
+        if (setIsLoading) setIsLoading(false);
     }
 }
