@@ -13,6 +13,7 @@ import {
     Lock,
     Eye,
 } from "lucide-react";
+import Logo from "@/app/(site)/components/Logo";
 
 export default function SignInPage() {
     const router = useRouter();
@@ -83,12 +84,7 @@ export default function SignInPage() {
             <div className="hidden lg:flex lg:w-1/2 bg-[#0d2149] relative overflow-hidden flex-col justify-center">
                 {/* Absolute Header - Logo */}
                 <div className="absolute top-12 left-12 xl:left-24 flex items-center gap-3 text-white">
-                    <div className="bg-white text-blue-900 p-1.5 rounded text-sm font-bold flex items-center justify-center">
-                        <Hourglass size={20} strokeWidth={2.5} />
-                    </div>
-                    <span className="text-lg font-bold tracking-wide">
-                        AML <sub className="text-xs bottom-0">2</sub> Ligand
-                    </span>
+<Logo/>
                 </div>
 
                 {/* Main Centered Content */}

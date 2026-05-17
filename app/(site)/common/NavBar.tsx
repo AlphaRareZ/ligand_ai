@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import Button from "../components/Button";
+// import Button from "../components/Button";
 import { usePathname } from "next/navigation";
 import StartAnalysisButton from "../components/StartAnalysisButton";
 
@@ -33,10 +33,7 @@ export default function NavBar() {
                 })}
             </ul>
 
-            <Link href={"/sign-in"}>
-                {/* <Button  className="ml-8 hidden sm:inline-flex">Start Analysis</Button> */}
-                <StartAnalysisButton>Start Analysis</StartAnalysisButton>
-            </Link>
+            <StartAnalysisButton>Start Analysis</StartAnalysisButton>
         </nav>
     );
 }
