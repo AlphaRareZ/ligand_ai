@@ -70,7 +70,7 @@ export default function SignInPage() {
             }
 
             // Route to dashboard
-            router.push("/lab");
+            window.location.href = "/lab";
         } catch (err: any) {
             setErrorMsg(err.message);
         } finally {

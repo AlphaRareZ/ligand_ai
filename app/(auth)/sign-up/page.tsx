@@ -75,7 +75,7 @@ export default function SignUpPage() {
                         expires: 30,
                     });
                 }
-                router.push("/lab");
+                window.location.href = "/lab";
             } else {
                 // If the backend just creates the account and expects a manual login, route to sign-in:
                 router.push("/sign-in");
