@@ -53,7 +53,7 @@ export default function LigandGenerate() {
       const baseUrl = process.env.NEXT_PUBLIC_API_LIGAND_BASE_URL;
       const res = await fetch(
         `${baseUrl}/getproteinswithnoligands?pageNumber=${pageNumber}&pageSize=${pageSize}`,
-        { credentials: "include", headers: { "Content-Type": "application/json" } },
+        { credentials: "include" },
       );
       const json: ApiResponse = await res.json();
       if (!json.success) {

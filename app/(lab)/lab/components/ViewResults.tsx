@@ -280,7 +280,6 @@ export default function ViewResults({ analysisId, onClose }: Props) {
       const baseUrl = process.env.NEXT_PUBLIC_API_ANALYSIS_BASE_URL;
       const res = await fetch(`${baseUrl}/get?guid=${analysisId}`, {
         credentials: "include",
-        headers: { "Content-Type": "application/json" },
       });
       const json: ApiResponse = await res.json();
       if (!json.success) { setErrorMsg(json.message); return; }

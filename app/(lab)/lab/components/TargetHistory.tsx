@@ -69,9 +69,6 @@ export default function TargetHistory({ onViewResults }: Props) {
 
       const res = await fetch(`${baseUrl}/getAll`, {
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
       });
 
       const json: ApiResponse = await res.json();
