@@ -7,7 +7,7 @@ const footerData = [
         items: [
             {
                 label: "Email",
-                link: "mailto:dodo1003pro@gmail.com",
+                link: "mailto:aelafifi00@gmail.com",
             },
             {
                 label: "Phone",
@@ -20,7 +20,7 @@ const footerData = [
         items: [
             {
                 label: "API",
-                link: "https://auth.aml2ligand.online/scalar",
+                link: "https://api.aml2ligand.online/scalar",
             },
         ],
     },
@@ -69,7 +69,7 @@ export default function Footer() {
                 {/* الجزء السفلي: تحت بعض في الموبايل، وجنب بعض في الشاشات الكبيرة */}
                 <div className="pt-8 pb-12 text-sm text-gray-500 flex flex-col md:flex-row justify-between items-center gap-4">
                     <p className="text-center md:text-left">
-                        &copy; {2026} Ligand AI Therapeutics Inc. All rights
+                        &copy; {2026} AML2Ligand Research Lab. All rights
                         reserved.
                     </p>
                     <div className="flex gap-6">

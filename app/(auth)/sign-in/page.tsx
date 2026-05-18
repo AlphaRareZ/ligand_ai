@@ -118,7 +118,7 @@ export default function SignInPage() {
 
                 {/* Absolute Footer - Copyright */}
                 <div className="absolute bottom-12 left-12 xl:left-24 text-sm text-blue-200/50">
-                    © 2024 Ligand AI Research Lab. All rights reserved.
+                    © 2026 AML2Ligand Research Lab. All rights reserved.
                 </div>
             </div>
 

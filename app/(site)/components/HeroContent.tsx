@@ -23,7 +23,7 @@ export default function HeroContent() {
             <HeadingContent
                 heading="Accelerating AML Drug Discovery with"
                 bluePart="AI & RNA-Seq"
-                description="Ligand AI leverages advanced generative models and precision RNA sequencing to identify novel therapeutic targets and small molecules for Acute Myeloid Leukemia."
+                description="AML2Ligand leverages advanced generative models and precision RNA sequencing to identify novel therapeutic targets and small molecules for Acute Myeloid Leukemia."
             />
             {/* <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-white">
         Accelerating AML Drug Discovery with{" "}
