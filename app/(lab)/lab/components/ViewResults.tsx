@@ -45,6 +45,14 @@ interface ApiResponse {
 
 /* ─── Helpers ────────────────────────────────────────────────────── */
 
+/**
+ * Route external file fetches through the Next.js server-side proxy to avoid
+ * CORS errors when the browser would otherwise request S3 / blob URLs directly.
+ */
+function proxyUrl(externalUrl: string): string {
+  return `/api/file-proxy?url=${encodeURIComponent(externalUrl)}`;
+}
+
 function parseCsv(text: string): string[][] {
   const lines = text.trim().split("\n");
   return lines.map(line => {
@@ -63,7 +71,8 @@ function parseCsv(text: string): string[][] {
 
 async function downloadFile(url: string, filename: string) {
   try {
-    const res = await fetch(url);
+    // Always go through the proxy so downloads also work cross-origin
+    const res = await fetch(proxyUrl(url));
     const blob = await res.blob();
     const blobUrl = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -88,7 +97,7 @@ function CsvFileCard({ file }: { file: AnalysisFile }) {
   const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
-    fetch(file.fileUrl)
+    fetch(proxyUrl(file.fileUrl))
       .then(r => r.text())
       .then(text => {
         const parsed = parseCsv(text);
@@ -182,7 +191,7 @@ function PdbViewer({ url, onClose }: { url: string; onClose: () => void }) {
           });
         }
 
-        const res = await fetch(url);
+        const res = await fetch(proxyUrl(url));
         if (!res.ok) throw new Error("Failed to fetch PDB file");
         const pdbData = await res.text();
 
