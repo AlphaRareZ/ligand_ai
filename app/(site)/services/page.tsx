@@ -5,6 +5,7 @@ import { CardBody } from "../components/CardBody";
 import { Atom, Dna } from "lucide-react";
 import Button from "../components/Button";
 import React from "react";
+import Link from "next/link";
 const content = [
     {
         primaryColor: "blue",
@@ -103,7 +104,7 @@ function ServicesSection() {
                     variant="primaryGlow"
                     className="w-full font-bold! text-xl! shadow-md hover:shadow-[0_0_20px_#1152d4] transition-shadow duration-300"
                 >
-                    Start Target Analysis
+                    <Link href="/lab">Start Target Analysis</Link>
                 </Button>
             </ServiceCard>
             <ServiceCard {...content[1]}>
@@ -123,7 +124,7 @@ function ServicesSection() {
                     variant="primaryGlow"
                     className="w-full font-bold! text-xl! shadow-md hover:shadow-[0_0_20px_#1152d4] transition-shadow duration-300"
                 >
-                    Begin Ligand Generation{" "}
+                    <Link href="/lab">Begin Ligand Generation{" "}</Link>
                 </Button>
             </ServiceCard>
         </div>

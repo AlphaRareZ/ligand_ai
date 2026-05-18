@@ -9,7 +9,6 @@ export async function startAnalysis(
     try {
         if (setIsLoading) setIsLoading(true);
 
-        // 1. جرب تجيب بيانات اليوزر
         const meResponse = await fetch(`${baseUrl}/me`, {
             method: "GET",
             credentials: "include",
@@ -17,10 +16,9 @@ export async function startAnalysis(
 
         if (meResponse.ok) {
             await router.replace("/lab");
-            return; // اخرج فوراً ومتخليش الـ Loading يقفل عشان ملمحش الصفحة القديمة
+            return; 
         }
 
-        // 2. لو مفيش، جرب الـ Refresh
         const refreshResponse = await fetch(`${baseUrl}/refresh`, {
             method: "POST",
             credentials: "include",
@@ -31,10 +29,8 @@ export async function startAnalysis(
             return;
         }
 
-        // 3. لو كله فشل، روح للـ Sign in
         await router.replace("/sign-in");
-        if (setIsLoading) setIsLoading(false); // اقفل الـ loading لو خلاص مفيش نقل وهيقف في الـ sign-in
-
+        if (setIsLoading) setIsLoading(false);
     } catch (error) {
         console.error("Routing error:", error);
         await router.replace("/sign-in");

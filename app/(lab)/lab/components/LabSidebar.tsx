@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faDna,
@@ -12,6 +12,18 @@ import {
   faArrowRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  userName: string;
+  firstName: string;
+  lastName: string;
+  createdAt: string;
+  lastLoginAt: string | null;
+  roles: string[];
+}
 
 export type LabView =
   | "target-history"
@@ -57,6 +69,27 @@ export default function LabSidebar({
   activeView,
   onViewChange,
 }: LabSidebarProps) {
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const router = useRouter();
+  const baseUrl = process.env.NEXT_PUBLIC_AUTH_URL;
+  useEffect(() => {
+    fetch(`${baseUrl}/me`,{credentials:"include"})
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data) setUser(data);
+      })
+      .catch(console.error);
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await fetch(`${baseUrl}/logout`, { method: "POST" , credentials:"include"});
+      router.push("/");
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <aside className="relative flex flex-col w-72 min-h-screen bg-[#0b1120]/90 border-r border-white/[0.06] backdrop-blur-xl z-20">
       {/* Glow orb accent */}
@@ -136,16 +169,34 @@ export default function LabSidebar({
 
       {/* Bottom section */}
       <div className="relative px-4 py-5 border-t border-white/[0.06]">
-        <Link
-          href="/"
-          className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-white/[0.04] transition-all duration-200"
-        >
-          <FontAwesomeIcon
-            icon={faArrowRightFromBracket}
-            className="w-3.5 h-3.5 text-slate-500"
-          />
-          <span>Back to Site</span>
-        </Link>
+        {user ? (
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-3 px-2">
+              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#1152d4]/30 to-[#1152d4]/10 border border-[#1152d4]/30 flex items-center justify-center text-[#4d8ef7] font-bold text-sm uppercase shadow-[0_0_15px_rgba(17,82,212,0.15)]">
+                {user.firstName?.[0] || ""}{user.lastName?.[0] || ""}
+              </div>
+              <div className="flex-1 overflow-hidden">
+                <p className="text-sm font-semibold text-white truncate">{user.firstName} {user.lastName}</p>
+                <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
+              </div>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="group flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-rose-500/[0.08] hover:border-rose-500/20 border border-transparent transition-all duration-200 cursor-pointer"
+            >
+              <FontAwesomeIcon icon={faArrowRightFromBracket} className="w-3.5 h-3.5 group-hover:text-rose-400 transition-colors" />
+              <span>Logout Account</span>
+            </button>
+          </div>
+        ) : (
+          <div className="animate-pulse flex items-center gap-3 px-2 py-1">
+            <div className="w-9 h-9 rounded-full bg-white/[0.04]" />
+            <div className="flex-1 space-y-2">
+              <div className="h-3 bg-white/[0.04] rounded w-20" />
+              <div className="h-2 bg-white/[0.04] rounded w-28" />
+            </div>
+          </div>
+        )}
       </div>
     </aside>
   );

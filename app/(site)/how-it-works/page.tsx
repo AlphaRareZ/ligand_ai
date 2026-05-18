@@ -113,7 +113,7 @@ export default function HowItWorks() {
           <HowItWorksCard
             color="green"
             phase="Phase 03"
-            heading="Network-Based Target Prioritization"
+            heading="Structural Modeling"
             description="We transition from genetic data to physical structure. By integrating AlphaFold PDB predictions, we define precise binding pockets and identify cryptic sites for allosteric modulation."
             imgSrc="phase3.png"
             // isReversed={true}

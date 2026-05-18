@@ -13,6 +13,15 @@ export default function LabPage() {
   const [viewingResultsId, setViewingResultsId] = useState<string | null>(null);
 
   const renderContent = () => {
+    if (viewingResultsId) {
+      return (
+        <ViewResults
+          analysisId={viewingResultsId}
+          onClose={() => setViewingResultsId(null)}
+        />
+      );
+    }
+
     switch (activeView) {
       case "target-history":
         return <TargetHistory onViewResults={(id) => setViewingResultsId(id)} />;
@@ -41,14 +50,6 @@ export default function LabPage() {
           {renderContent()}
         </div>
       </div>
-
-      {/* Results Modal */}
-      {viewingResultsId && (
-        <ViewResults
-          analysisId={viewingResultsId}
-          onClose={() => setViewingResultsId(null)}
-        />
-      )}
     </div>
   );
 }
