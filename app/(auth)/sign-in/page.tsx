@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 import {
     Hourglass,
@@ -16,7 +16,6 @@ import {
 import Logo from "@/app/(site)/components/Logo";
 
 export default function SignInPage() {
-    const router = useRouter();
 
     // UI States
     const [showPassword, setShowPassword] = useState(false);
@@ -51,10 +50,16 @@ export default function SignInPage() {
                 );
             }
 
-            // The backend sets auth cookies via Set-Cookie response headers.
-            // Because we use credentials: "include", the browser stores them
-            // automatically — no manual cookie handling needed here.
-            await response.json(); // consume the body
+            // The backend sets its own HttpOnly auth cookie (for auth.aml2ligand.online)
+            // automatically via Set-Cookie — browser stores it, we don't touch it.
+            // We set a lightweight same-domain `session` cookie so the middleware
+            // can do a fast, zero-latency UX gate check without a network call.
+            await response.json(); // consume body
+
+            Cookies.set("session", "1", {
+                sameSite: "lax",
+                secure: true,
+            });
 
             window.location.href = "/lab";
         } catch (err: any) {

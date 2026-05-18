@@ -13,6 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 export interface UserProfile {
   id: string;
@@ -83,10 +84,13 @@ export default function LabSidebar({
 
   const handleLogout = async () => {
     try {
-      await fetch(`${baseUrl}/logout`, { method: "POST" , credentials:"include"});
-      router.push("/");
+      await fetch(`${baseUrl}/logout`, { method: "POST", credentials: "include" });
     } catch (e) {
       console.error(e);
+    } finally {
+      // Always clear the session cookie so middleware blocks /lab
+      Cookies.remove("session");
+      window.location.href = "/";
     }
   };
 

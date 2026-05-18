@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "../globals.css";
+import AuthGuard from "./components/AuthGuard";
 
 export const metadata: Metadata = {
   title: "Lab Workspace — AML2Ligand",
@@ -14,7 +15,7 @@ export default function LabLayout({
 }>) {
   return (
     <div className="min-h-full h-full bg-[#101622] text-white">
-      {children}
+      <AuthGuard>{children}</AuthGuard>
     </div>
   );
 }
