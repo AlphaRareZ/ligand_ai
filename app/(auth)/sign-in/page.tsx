@@ -69,7 +69,7 @@ export default function SignInPage() {
                 });
             }
 
-            router.push("/lab");
+            window.location.href = "/lab";
         } catch (err: any) {
             setErrorMsg(err.message);
         } finally {

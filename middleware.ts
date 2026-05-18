@@ -2,14 +2,14 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 /**
- * Proxy (Middleware) — protects /lab routes.
+ * Middleware — protects /lab routes.
  *
  * 1. If `accessToken` cookie exists → allow through.
  * 2. If only `refreshToken` exists → call the refresh endpoint to
  *    get a new access token, forward the Set-Cookie headers.
  * 3. If neither token is present → redirect to /sign-in.
  */
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
 
