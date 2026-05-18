@@ -22,7 +22,9 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
     fetch(`${authUrl}/me`, {
       method: "GET",
-      credentials: "include", // sends the real HttpOnly auth cookie to auth.aml2ligand.online
+      // Same-origin request → Next.js rewrites to auth.aml2ligand.online server-side.
+      // credentials: "include" is harmless here (same-origin always sends cookies).
+      credentials: "include",
     })
       .then((res) => {
         if (res.ok) {
