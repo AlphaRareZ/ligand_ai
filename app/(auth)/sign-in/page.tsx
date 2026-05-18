@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
+
 import {
     Hourglass,
     ShieldCheck,
@@ -51,23 +51,10 @@ export default function SignInPage() {
                 );
             }
 
-            const data = await response.json();
-
-            // Store tokens in cookies securely
-            if (data.accessToken) {
-                Cookies.set("accessToken", data.accessToken, {
-                    secure: true,
-                    sameSite: "strict",
-                });
-            }
-            if (data.refreshToken) {
-                // Typically refresh tokens have a longer expiry, e.g., 30 days
-                Cookies.set("refreshToken", data.refreshToken, {
-                    secure: true,
-                    sameSite: "strict",
-                    expires: 30,
-                });
-            }
+            // The backend sets auth cookies via Set-Cookie response headers.
+            // Because we use credentials: "include", the browser stores them
+            // automatically — no manual cookie handling needed here.
+            await response.json(); // consume the body
 
             window.location.href = "/lab";
         } catch (err: any) {
