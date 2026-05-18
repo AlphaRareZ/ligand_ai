@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Button  from "./Button";
 
 export default function CTASection() {
@@ -16,9 +17,11 @@ export default function CTASection() {
           </p>
           {/* flex-wrap عشان لو الشاشة صغيرة الزراير تنزل تحت بعض بدل ما تفعص بعض */}
           <div className="flex flex-wrap justify-center gap-4">
-            <Button variant="blueBack" size="lg">
-              Start Now
-            </Button>
+            <Link href="/lab">
+              <Button variant="blueBack" size="lg">
+                Start Now
+              </Button>
+            </Link>
             <Button variant="ghost" size="lg" className="border border-white">
               Contact Us
             </Button>
