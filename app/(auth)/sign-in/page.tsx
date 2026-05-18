@@ -69,8 +69,7 @@ export default function SignInPage() {
                 });
             }
 
-            // Route to dashboard
-            window.location.href = "/lab";
+            router.push("/lab");
         } catch (err: any) {
             setErrorMsg(err.message);
         } finally {
