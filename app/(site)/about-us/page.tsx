@@ -7,7 +7,7 @@ import { Brain, Dna, FlaskConical, Users } from "lucide-react";
 export const metadata = {
   title: "About Us — AML2Ligand",
   description:
-    "Meet the AML2Ligand research team — computer science students from the Faculty of Computers and AI, building the next generation of AI-driven drug discovery tools for Acute Myeloid Leukemia.",
+    "Meet the AML2Ligand research team — computer science students from the Faculty of Computers and AI - Cairo University, building the next generation of AI-driven drug discovery tools for Acute Myeloid Leukemia.",
 };
 
 /* ─── Value cards ────────────────────────────────────────────────── */
