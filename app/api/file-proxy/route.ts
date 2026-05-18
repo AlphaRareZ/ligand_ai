@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
+// Never statically cache this route — each request must be handled fresh.
+export const dynamic = "force-dynamic";
+
 /**
  * GET /api/file-proxy?url=<encoded-url>
  *
@@ -48,8 +51,9 @@ export async function GET(req: NextRequest) {
       status: 200,
       headers: {
         "Content-Type": contentType,
-        // Allow the browser to cache public files for up to 5 minutes
-        "Cache-Control": "public, max-age=300, stale-while-revalidate=60",
+        // Must be private + no-store so no shared cache (CDN / reverse-proxy)
+        // can serve one file's response for a completely different URL.
+        "Cache-Control": "private, no-store",
       },
     });
   } catch (err) {

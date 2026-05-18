@@ -180,11 +180,13 @@ function PdbViewer({ url, onClose }: { url: string; onClose: () => void }) {
 
     const init = async () => {
       try {
-        // Load 3Dmol.js script once
+        // Use 3Dmol 2.0.3 — version 2.4.x has a known internal bug where it
+        // crashes with "Cannot read properties of undefined (reading 'symmetries')"
+        // when parsing CRYST1 / REMARK 290 symmetry records in some PDB files.
         if (!(window as unknown as Record<string, unknown>).$3Dmol) {
           await new Promise<void>((resolve, reject) => {
             const s = document.createElement("script");
-            s.src = "https://cdn.jsdelivr.net/npm/3dmol@2.4.2/build/3Dmol-min.js";
+            s.src = "https://cdn.jsdelivr.net/npm/3dmol@2.0.3/build/3Dmol-min.js";
             s.onload = () => resolve();
             s.onerror = () => reject(new Error("Failed to load 3Dmol.js"));
             document.head.appendChild(s);
@@ -193,21 +195,37 @@ function PdbViewer({ url, onClose }: { url: string; onClose: () => void }) {
 
         const res = await fetch(proxyUrl(url));
         if (!res.ok) throw new Error("Failed to fetch PDB file");
-        const pdbData = await res.text();
+        const rawPdb = await res.text();
 
         if (cancelled || !containerRef.current) return;
+
+        // Strip CRYST1 and REMARK 290 symmetry lines — these are the lines that
+        // trigger the internal 'symmetries' crash in 3Dmol's PDB parser when the
+        // records don't exactly match the expected format.
+        const pdbData = rawPdb
+          .split("\n")
+          .filter(line => !line.startsWith("CRYST1") && !line.startsWith("REMARK 290"))
+          .join("\n");
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const $3Dmol = (window as any).$3Dmol;
         const viewer = $3Dmol.createViewer(containerRef.current, {
           backgroundColor: "#0a0f1a",
         });
-        viewer.addModel(pdbData, "pdb");
-        viewer.setStyle({}, { cartoon: { color: "spectrum" } });
-        viewer.zoomTo();
-        viewer.render();
-        viewer.zoom(1.1, 1000);
-        setIsLoading(false);
+
+        // addModel can still throw for malformed records — catch it separately
+        // so the viewer shell itself stays alive and we can show a useful error.
+        try {
+          viewer.addModel(pdbData, "pdb");
+          viewer.setStyle({}, { cartoon: { color: "spectrum" } });
+          viewer.zoomTo();
+          viewer.render();
+          viewer.zoom(1.1, 1000);
+          setIsLoading(false);
+        } catch (parseErr: unknown) {
+          const msg = parseErr instanceof Error ? parseErr.message : "PDB parse error";
+          throw new Error(`3D viewer could not parse the structure: ${msg}`);
+        }
       } catch (err: unknown) {
         if (!cancelled) setError(err instanceof Error ? err.message : "Failed to load viewer");
         setIsLoading(false);
