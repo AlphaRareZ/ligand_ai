@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 /* ─── Types ──────────────────────────────────────────────────────── */
 interface TeamMember {
@@ -19,7 +19,7 @@ const TEAM: TeamMember[] = [
         name: "Abdullah El-Afifi",
         role: "AI Drug Discovery Scientist",
         quote: "Bridging the gap between complex AI models and an intuitive user experience. I design the systems that turn raw molecular predictions into actionable clinical insights for researchers.",
-        image: "/Afifi.jpg",
+        image: "https://pub-a36c7e0b4a1444c48def1977e87f7a9c.r2.dev/uploads/Afifi.jpg",
         linkedin: "https://eg.linkedin.com/in/abdullah-el-afifi",
         email: "mailto:aelafifi00@gmail.com",
         tags: ["PyTorch", "CUDA", "MLOps"],
@@ -29,7 +29,7 @@ const TEAM: TeamMember[] = [
         name: "Yousef Khaled",
         role: "Generative AI & Drug Design",
         quote: "Designing molecules from first principles using generative neural networks. Our models learn the grammar of chemistry to propose ligands that are both novel and synthesisable.",
-        image: "/Yousef.jpg",
+        image: "https://pub-a36c7e0b4a1444c48def1977e87f7a9c.r2.dev/uploads/Yousef.jpg",
         linkedin: "https://eg.linkedin.com/in/yosefkhaled",
         email: "mailto:yosefffflm10@gmail.com",
         tags: ["GNN", "SMILES", "Docking"],
@@ -38,7 +38,7 @@ const TEAM: TeamMember[] = [
         name: "Mariam Muhammed",
         role: "Operations Research & Decision Support",
         quote: "Applying multi-objective optimisation to the drug discovery pipeline. We're not just ranking candidates — we're providing decision frameworks that account for toxicity, cost, and synthesisability simultaneously.",
-        image: "/team4.png",
+        image: "https://static.vecteezy.com/system/resources/thumbnails/003/793/482/small/transparent-grid-pattern-for-background-vector.jpg",
         linkedin: "https://www.linkedin.com/in/mariamhanafy",
         email: "mailto:mariaam.mohammed4@gmail.com",
         tags: ["Active Researcher", "Data Science"],
@@ -47,7 +47,7 @@ const TEAM: TeamMember[] = [
         name: "Basma Mamdouh",
         role: "Operations Research & Decision Support",
         quote: "As a computational biologist, I work on the front lines of precision medicine — translating complex genomic data into actionable therapeutic strategies. My research focuses on deciphering the transcriptomic signatures of AML to identify novel drug targets and predict treatment response.",
-        image: "/team4.png",
+        image: "https://static.vecteezy.com/system/resources/thumbnails/003/793/482/small/transparent-grid-pattern-for-background-vector.jpg",
         linkedin: "https://www.linkedin.com/in/basma-mamdouh-33710424b/",
         email: "mailto:basmammdouh120@gmail.com",
         tags: ["Computational Biologist", "Data Scientist"],
@@ -56,7 +56,7 @@ const TEAM: TeamMember[] = [
         name: "Muhammed Alaa Eddin ",
         role: "Software Engineer & DevOps",
         quote: "I build more than software — I build systems with intention.From architecture to deployment, every part of the project reflects problem solving, engineering, and countless hours of turning ideas into something real",
-        image: "/Muhammed.jpg",
+        image: "https://pub-a36c7e0b4a1444c48def1977e87f7a9c.r2.dev/uploads/Muhammed.jpg",
         linkedin: "https://www.linkedin.com/",
         email: "mailto:Muhammedalaa.404@gmail.com",
         tags: ["DevOps", "Software Architecture", "MLOps"],
@@ -131,16 +131,27 @@ export default function TeamCarousel() {
     const [current, setCurrent] = useState(0);
     const [animating, setAnimating] = useState(false);
     const [direction, setDirection] = useState<"left" | "right">("right");
+    const [imageReady, setImageReady] = useState(true);
+    const preloadRef = useRef<HTMLImageElement | null>(null);
 
     const count = TEAM.length;
 
     const go = useCallback(
         (next: number, dir: "left" | "right") => {
             if (animating) return;
+            const nextIndex = ((next % count) + count) % count;
+
+            // Preload the next image while slide-out is happening
+            const img = new Image();
+            img.src = TEAM[nextIndex].image;
+            preloadRef.current = img;
+
             setDirection(dir);
             setAnimating(true);
+            setImageReady(false);
+
             setTimeout(() => {
-                setCurrent((next + count) % count);
+                setCurrent(nextIndex);
                 setAnimating(false);
             }, 340);
         },
@@ -156,7 +167,19 @@ export default function TeamCarousel() {
         return () => clearInterval(id);
     }, [current, go]);
 
+    // Preload ALL images on mount so subsequent transitions are instant
+    useEffect(() => {
+        TEAM.forEach((m) => {
+            const img = new Image();
+            img.src = m.image;
+        });
+    }, []);
+
     const member = TEAM[current];
+
+    const handleImageLoad = () => {
+        setImageReady(true);
+    };
 
     // Slide animation classes
     const slideOut =
@@ -236,9 +259,13 @@ export default function TeamCarousel() {
                     <div className="relative h-64 lg:h-auto min-h-[280px] order-1 lg:order-2 overflow-hidden bg-gradient-to-br from-[#0d1629] to-[#111827] flex items-center justify-center">
                         {/* Silhouette icon */}
                         <img
+                            key={member.image}
                             src={member.image}
                             alt={member.name}
-                            className="w-full h-full object-cover absolute inset-0"
+                            onLoad={handleImageLoad}
+                            className={`w-full h-full object-cover absolute inset-0 transition-opacity duration-300 ${
+                                imageReady ? "opacity-100" : "opacity-0"
+                            }`}
                         />
                         {/* <svg
                             viewBox="0 0 120 140"
