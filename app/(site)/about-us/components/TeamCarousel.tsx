@@ -41,7 +41,7 @@ const TEAM: TeamMember[] = [
         image: "https://pub-a36c7e0b4a1444c48def1977e87f7a9c.r2.dev/uploads/Muhammed.jpg",
         linkedin: "https://www.linkedin.com/",
         email: "mailto:Muhammedalaa.404@gmail.com",
-        tags: ["DevOps", "Software Architecture", "MLOps"],
+        tags: [ "Software Architecture","DevOps", "Backend Engineer"],
     },
     {
         name: "Mariam Muhammed",
