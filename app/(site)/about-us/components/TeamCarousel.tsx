@@ -19,7 +19,7 @@ const TEAM: TeamMember[] = [
         name: "Abdullah El-Afifi",
         role: "AI Drug Discovery Scientist",
         quote: "Bridging the gap between complex AI models and an intuitive user experience. I design the systems that turn raw molecular predictions into actionable clinical insights for researchers.",
-        image: "/team1.png",
+        image: "/Afifi.jpg",
         linkedin: "https://eg.linkedin.com/in/abdullah-el-afifi",
         email: "mailto:aelafifi00@gmail.com",
         tags: ["PyTorch", "CUDA", "MLOps"],
@@ -29,7 +29,7 @@ const TEAM: TeamMember[] = [
         name: "Yousef Khaled",
         role: "Generative AI & Drug Design",
         quote: "Designing molecules from first principles using generative neural networks. Our models learn the grammar of chemistry to propose ligands that are both novel and synthesisable.",
-        image: "/team3.png",
+        image: "/Yousef.jpg",
         linkedin: "https://eg.linkedin.com/in/yosefkhaled",
         email: "mailto:yosefffflm10@gmail.com",
         tags: ["GNN", "SMILES", "Docking"],
@@ -54,12 +54,12 @@ const TEAM: TeamMember[] = [
     },
     {
         name: "Muhammed Alaa Eddin ",
-        role: "Computational Biology Lead",
+        role: "Software Engineer & DevOps",
         quote: "I build more than software — I build systems with intention.From architecture to deployment, every part of the project reflects problem solving, engineering, and countless hours of turning ideas into something real",
-        image: "/me.png",
+        image: "/Muhammed.jpg",
         linkedin: "https://www.linkedin.com/",
         email: "mailto:Muhammedalaa.404@gmail.com",
-        tags: ["Software Engineer", "DevOps"],
+        tags: ["DevOps", "Software Architecture", "MLOps"],
     },
 ];
 
@@ -235,7 +235,12 @@ export default function TeamCarousel() {
                     {/* ── Right: blank avatar placeholder ── */}
                     <div className="relative h-64 lg:h-auto min-h-[280px] order-1 lg:order-2 overflow-hidden bg-gradient-to-br from-[#0d1629] to-[#111827] flex items-center justify-center">
                         {/* Silhouette icon */}
-                        <svg
+                        <img
+                            src={member.image}
+                            alt={member.name}
+                            className="w-full h-full object-cover absolute inset-0"
+                        />
+                        {/* <svg
                             viewBox="0 0 120 140"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
@@ -248,7 +253,7 @@ export default function TeamCarousel() {
                                 strokeWidth="2"
                                 fill="white"
                             />
-                        </svg>
+                        </svg> */}
                         {/* Subtle grid overlay */}
                         <div className="absolute inset-0 opacity-[0.04] bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M0%200h40v40H0z%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M40%200v40M0%2040h40%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%220.5%22%2F%3E%3C%2Fsvg%3E')] bg-[length:40px_40px] pointer-events-none" />
                         {/* gradient overlay */}

@@ -6,13 +6,13 @@ const footerData = [
         title: "Contact",
         items: [
             {
-                label: "Email",
-                link: "mailto:aelafifi00@gmail.com",
+                label: "Email 1",
+                link: "mailto:20221238@stud.fci-cu.edu.eg",
             },
             {
-                label: "Phone",
-                link: "tel:+201005400750",
-            },
+                label: "Email 2",
+                link: "mailto:20211083@stud.fci-cu.edu.eg",
+            },            
         ],
     },
     {
