@@ -17,7 +17,7 @@ interface TeamMember {
 const TEAM: TeamMember[] = [
     {
         name: "Abdullah El-Afifi",
-        role: "Data Scientist",
+        role: "AI Drug Discovery Scientist",
         quote: "Bridging the gap between complex AI models and an intuitive user experience. I design the systems that turn raw molecular predictions into actionable clinical insights for researchers.",
         image: "/team1.png",
         linkedin: "https://eg.linkedin.com/in/abdullah-el-afifi",
