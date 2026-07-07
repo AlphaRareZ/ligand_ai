@@ -45,19 +45,70 @@ export async function GET(req: NextRequest) {
     }
 
     const contentType = upstream.headers.get("content-type") ?? "application/octet-stream";
+    const contentDisposition = upstream.headers.get("content-disposition");
     const body = await upstream.arrayBuffer();
 
-    return new NextResponse(body, {
-      status: 200,
-      headers: {
-        "Content-Type": contentType,
-        // Must be private + no-store so no shared cache (CDN / reverse-proxy)
-        // can serve one file's response for a completely different URL.
-        "Cache-Control": "private, no-store",
-      },
-    });
+    const headers: Record<string, string> = {
+      "Content-Type": contentType,
+      // Must be private + no-store so no shared cache (CDN / reverse-proxy)
+      // can serve one file's response for a completely different URL.
+      "Cache-Control": "private, no-store",
+    };
+    if (contentDisposition) headers["Content-Disposition"] = contentDisposition;
+
+    return new NextResponse(body, { status: 200, headers });
   } catch (err) {
     console.error("[file-proxy] fetch error:", err);
     return NextResponse.json({ error: "Failed to fetch remote file" }, { status: 502 });
+  }
+}
+
+/**
+ * HEAD /api/file-proxy?url=<encoded-url>
+ *
+ * Lightweight metadata-only request. Sends a HEAD to the upstream URL and
+ * returns Content-Disposition / Content-Type so the client can show the
+ * real filename without downloading the entire file.
+ */
+export async function HEAD(req: NextRequest) {
+  const raw = req.nextUrl.searchParams.get("url");
+
+  if (!raw) {
+    return new NextResponse(null, { status: 400 });
+  }
+
+  let url: URL;
+  try {
+    url = new URL(raw);
+  } catch {
+    return new NextResponse(null, { status: 400 });
+  }
+
+  try {
+    const upstream = await fetch(url.toString(), {
+      method: "HEAD",
+      headers: { Accept: "*/*" },
+      cache: "no-store",
+    });
+
+    if (!upstream.ok) {
+      return new NextResponse(null, { status: upstream.status });
+    }
+
+    const headers: Record<string, string> = {
+      "Cache-Control": "private, no-store",
+      "Access-Control-Expose-Headers": "Content-Disposition, Content-Type",
+    };
+
+    const ct = upstream.headers.get("content-type");
+    if (ct) headers["Content-Type"] = ct;
+
+    const cd = upstream.headers.get("content-disposition");
+    if (cd) headers["Content-Disposition"] = cd;
+
+    return new NextResponse(null, { status: 200, headers });
+  } catch (err) {
+    console.error("[file-proxy] HEAD error:", err);
+    return new NextResponse(null, { status: 502 });
   }
 }

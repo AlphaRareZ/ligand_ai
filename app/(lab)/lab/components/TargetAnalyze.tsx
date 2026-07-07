@@ -17,13 +17,16 @@ interface QueueInfo {
 }
 
 /**
- * Fetch the real filename from a URL by making a HEAD request
- * and reading the Content-Disposition header.
+ * Fetch the real filename from a URL by making a HEAD request through
+ * the server-side proxy (to avoid CORS) and reading the Content-Disposition header.
  */
 async function fetchFilename(url: string): Promise<string | null> {
   if (!url.trim()) return null;
   try {
-    const res = await fetch(url.trim(), { method: "HEAD" });
+    const proxyUrl = `/api/file-proxy?url=${encodeURIComponent(url.trim())}`;
+    const res = await fetch(proxyUrl, { method: "HEAD" });
+    if (!res.ok) return null;
+
     const cd = res.headers.get("content-disposition");
     if (cd) {
       // Try filename*= (RFC 5987) first, then filename=
@@ -32,9 +35,8 @@ async function fetchFilename(url: string): Promise<string | null> {
       const match = cd.match(/filename\s*=\s*"?([^";]+)"?/i);
       if (match) return match[1].trim();
     }
-    // Fallback: derive from the final URL path
-    const finalUrl = res.url || url.trim();
-    const pathname = new URL(finalUrl).pathname;
+    // Fallback: derive from the URL path
+    const pathname = new URL(url.trim()).pathname;
     const segments = pathname.split("/").filter(Boolean);
     const last = segments[segments.length - 1];
     if (last && last.includes(".")) return decodeURIComponent(last.split("?")[0]);
