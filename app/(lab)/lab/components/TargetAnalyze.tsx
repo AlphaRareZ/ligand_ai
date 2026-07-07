@@ -10,33 +10,65 @@ import {
 
 interface Props { onBack: () => void; }
 
-/**
- * Extract the filename from a URL string.
- * Returns null if the URL is empty or no filename can be extracted.
- */
-function extractFilename(url: string): string | null {
-  if (!url.trim()) return null;
-  try {
-    const pathname = new URL(url.trim()).pathname;
-    const segments = pathname.split("/").filter(Boolean);
-    const last = segments[segments.length - 1];
-    if (last && last.includes(".")) return decodeURIComponent(last);
-    return null;
-  } catch {
-    // Fallback for non-standard URLs: take last path segment
-    const segments = url.trim().split("/").filter(Boolean);
-    const last = segments[segments.length - 1];
-    // Strip query params
-    const clean = last?.split("?")[0];
-    if (clean && clean.includes(".")) return decodeURIComponent(clean);
-    return null;
-  }
-}
-
 interface QueueInfo {
   analysisId: string;
   positionInQueue: number;
   totalSeconds: number;
+}
+
+/**
+ * Fetch the real filename from a URL by making a HEAD request
+ * and reading the Content-Disposition header.
+ */
+async function fetchFilename(url: string): Promise<string | null> {
+  if (!url.trim()) return null;
+  try {
+    const res = await fetch(url.trim(), { method: "HEAD" });
+    const cd = res.headers.get("content-disposition");
+    if (cd) {
+      // Try filename*= (RFC 5987) first, then filename=
+      const utf8Match = cd.match(/filename\*\s*=\s*(?:UTF-8''|utf-8'')(.+)/i);
+      if (utf8Match) return decodeURIComponent(utf8Match[1].replace(/['"]/g, ""));
+      const match = cd.match(/filename\s*=\s*"?([^";]+)"?/i);
+      if (match) return match[1].trim();
+    }
+    // Fallback: derive from the final URL path
+    const finalUrl = res.url || url.trim();
+    const pathname = new URL(finalUrl).pathname;
+    const segments = pathname.split("/").filter(Boolean);
+    const last = segments[segments.length - 1];
+    if (last && last.includes(".")) return decodeURIComponent(last.split("?")[0]);
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Hook that fetches the filename from a URL with debouncing.
+ */
+function useFetchedFilename(url: string, delayMs = 600) {
+  const [filename, setFilename] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!url.trim()) { setFilename(null); return; }
+
+    let cancelled = false;
+    setLoading(true);
+
+    const timer = setTimeout(async () => {
+      const name = await fetchFilename(url);
+      if (!cancelled) {
+        setFilename(name);
+        setLoading(false);
+      }
+    }, delayMs);
+
+    return () => { cancelled = true; clearTimeout(timer); };
+  }, [url, delayMs]);
+
+  return { filename, loading };
 }
 
 export default function TargetAnalyze({ onBack }: Props) {
@@ -51,6 +83,10 @@ export default function TargetAnalyze({ onBack }: Props) {
   // Countdown state (in seconds)
   const [remaining, setRemaining] = useState(0);
   const totalRef = useRef(0);
+
+  // Fetch filenames from the provided URLs
+  const mappingFile = useFetchedFilename(mappingUrl);
+  const exonFile = useFetchedFilename(exonUrl);
 
   // ── Countdown timer ────────────────────────────────────────────
   useEffect(() => {
@@ -231,10 +267,16 @@ export default function TargetAnalyze({ onBack }: Props) {
           </label>
           <input id="mapping-url" type="url" value={mappingUrl} onChange={e => setMappingUrl(e.target.value)} placeholder="https://storage.example.com/mapping_data.csv"
             className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-[#4d8ef7]/40 focus:ring-1 focus:ring-[#4d8ef7]/20 transition-all duration-200" />
-          {extractFilename(mappingUrl) && (
-            <div className="flex items-center gap-2 animate-in fade-in duration-300">
+          {mappingFile.loading && mappingUrl.trim() && (
+            <div className="flex items-center gap-2">
+              <FontAwesomeIcon icon={faSpinner} className="w-3 h-3 text-slate-500 animate-spin" />
+              <span className="text-xs text-slate-500">Fetching file info...</span>
+            </div>
+          )}
+          {mappingFile.filename && !mappingFile.loading && (
+            <div className="flex items-center gap-2">
               <FontAwesomeIcon icon={faFileCircleCheck} className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="text-xs font-medium text-emerald-400">{extractFilename(mappingUrl)}</span>
+              <span className="text-xs font-medium text-emerald-400">{mappingFile.filename}</span>
             </div>
           )}
         </div>
@@ -247,10 +289,16 @@ export default function TargetAnalyze({ onBack }: Props) {
           </label>
           <input id="exon-url" type="url" value={exonUrl} onChange={e => setExonUrl(e.target.value)} placeholder="https://storage.example.com/exon_data.csv"
             className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-[#4d8ef7]/40 focus:ring-1 focus:ring-[#4d8ef7]/20 transition-all duration-200" />
-          {extractFilename(exonUrl) && (
-            <div className="flex items-center gap-2 animate-in fade-in duration-300">
+          {exonFile.loading && exonUrl.trim() && (
+            <div className="flex items-center gap-2">
+              <FontAwesomeIcon icon={faSpinner} className="w-3 h-3 text-slate-500 animate-spin" />
+              <span className="text-xs text-slate-500">Fetching file info...</span>
+            </div>
+          )}
+          {exonFile.filename && !exonFile.loading && (
+            <div className="flex items-center gap-2">
               <FontAwesomeIcon icon={faFileCircleCheck} className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="text-xs font-medium text-emerald-400">{extractFilename(exonUrl)}</span>
+              <span className="text-xs font-medium text-emerald-400">{exonFile.filename}</span>
             </div>
           )}
         </div>
