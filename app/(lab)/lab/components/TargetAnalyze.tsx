@@ -5,9 +5,33 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFlask, faUser, faLink, faDna, faHourglass,
   faBarsProgress, faSpinner, faTriangleExclamation,
+  faFileCircleCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
 interface Props { onBack: () => void; }
+
+/**
+ * Extract the filename from a URL string.
+ * Returns null if the URL is empty or no filename can be extracted.
+ */
+function extractFilename(url: string): string | null {
+  if (!url.trim()) return null;
+  try {
+    const pathname = new URL(url.trim()).pathname;
+    const segments = pathname.split("/").filter(Boolean);
+    const last = segments[segments.length - 1];
+    if (last && last.includes(".")) return decodeURIComponent(last);
+    return null;
+  } catch {
+    // Fallback for non-standard URLs: take last path segment
+    const segments = url.trim().split("/").filter(Boolean);
+    const last = segments[segments.length - 1];
+    // Strip query params
+    const clean = last?.split("?")[0];
+    if (clean && clean.includes(".")) return decodeURIComponent(clean);
+    return null;
+  }
+}
 
 interface QueueInfo {
   analysisId: string;
@@ -207,6 +231,12 @@ export default function TargetAnalyze({ onBack }: Props) {
           </label>
           <input id="mapping-url" type="url" value={mappingUrl} onChange={e => setMappingUrl(e.target.value)} placeholder="https://storage.example.com/mapping_data.csv"
             className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-[#4d8ef7]/40 focus:ring-1 focus:ring-[#4d8ef7]/20 transition-all duration-200" />
+          {extractFilename(mappingUrl) && (
+            <div className="flex items-center gap-2 animate-in fade-in duration-300">
+              <FontAwesomeIcon icon={faFileCircleCheck} className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="text-xs font-medium text-emerald-400">{extractFilename(mappingUrl)}</span>
+            </div>
+          )}
         </div>
 
         {/* Exon Data */}
@@ -217,6 +247,12 @@ export default function TargetAnalyze({ onBack }: Props) {
           </label>
           <input id="exon-url" type="url" value={exonUrl} onChange={e => setExonUrl(e.target.value)} placeholder="https://storage.example.com/exon_data.csv"
             className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-[#4d8ef7]/40 focus:ring-1 focus:ring-[#4d8ef7]/20 transition-all duration-200" />
+          {extractFilename(exonUrl) && (
+            <div className="flex items-center gap-2 animate-in fade-in duration-300">
+              <FontAwesomeIcon icon={faFileCircleCheck} className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="text-xs font-medium text-emerald-400">{extractFilename(exonUrl)}</span>
+            </div>
+          )}
         </div>
 
         <button id="submit-analysis" type="submit" disabled={submitting || !name.trim() || !mappingUrl.trim() || !exonUrl.trim()}

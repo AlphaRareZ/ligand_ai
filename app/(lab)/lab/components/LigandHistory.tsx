@@ -37,9 +37,17 @@ interface ApiResponse {
 
 /* ─── Helpers ────────────────────────────────────────────────────── */
 
+/**
+ * Route external file fetches through the Next.js server-side proxy to avoid
+ * CORS errors when the browser would otherwise request S3 / blob URLs directly.
+ */
+function proxyUrl(externalUrl: string): string {
+  return `/api/file-proxy?url=${encodeURIComponent(externalUrl)}`;
+}
+
 async function downloadFile(url: string, filename: string) {
   try {
-    const res = await fetch(url);
+    const res = await fetch(proxyUrl(url));
     const blob = await res.blob();
     const blobUrl = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -54,6 +62,28 @@ async function downloadFile(url: string, filename: string) {
   }
 }
 
+/**
+ * Detect format from URL: .sdf → "sdf", everything else → "pdb"
+ */
+function detectFormat(url: string): "pdb" | "sdf" {
+  const lower = url.toLowerCase();
+  if (lower.endsWith(".sdf") || lower.includes(".sdf?")) return "sdf";
+  return "pdb";
+}
+
+/**
+ * Determine if the data represents a small-molecule ligand.
+ * Ligands are rendered with `stick` style; proteins with `cartoon`.
+ */
+function isLigandStructure(url: string, format: "pdb" | "sdf"): boolean {
+  // SDF files are always small-molecule ligands
+  if (format === "sdf") return true;
+  // Heuristic: if the URL path segment contains "ligand" it's a ligand
+  const lower = url.toLowerCase();
+  if (lower.includes("ligand")) return true;
+  return false;
+}
+
 /* ─── PdbViewer (3Dmol.js) ───────────────────────────────────────── */
 
 function PdbViewer({ url, onClose }: { url: string; onClose: () => void }) {
@@ -66,41 +96,87 @@ function PdbViewer({ url, onClose }: { url: string; onClose: () => void }) {
 
     const init = async () => {
       try {
+        // Use 3Dmol 2.0.3 — version 2.4.x has a known internal bug where it
+        // crashes with "Cannot read properties of undefined (reading 'symmetries')"
+        // when parsing CRYST1 / REMARK 290 symmetry records in some PDB files.
         if (!(window as unknown as Record<string, unknown>).$3Dmol) {
           await new Promise<void>((resolve, reject) => {
             const s = document.createElement("script");
-            s.src = "https://cdn.jsdelivr.net/npm/3dmol@2.4.2/build/3Dmol-min.js";
+            s.src = "https://cdn.jsdelivr.net/npm/3dmol@2.0.3/build/3Dmol-min.js";
             s.onload = () => resolve();
             s.onerror = () => reject(new Error("Failed to load 3Dmol.js"));
             document.head.appendChild(s);
           });
         }
 
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("Failed to fetch PDB file");
-        const pdbData = await res.text();
+        const res = await fetch(proxyUrl(url));
+        if (!res.ok) throw new Error("Failed to fetch structure file");
+        const rawData = await res.text();
 
         if (cancelled || !containerRef.current) return;
+
+        const format = detectFormat(url);
+        const isLigand = isLigandStructure(url, format);
+
+        // For PDB format, strip CRYST1 and REMARK 290 symmetry lines that
+        // trigger crashes in 3Dmol's parser.
+        const structureData =
+          format === "pdb"
+            ? rawData
+                .split("\n")
+                .filter(
+                  (line) =>
+                    !line.startsWith("CRYST1") &&
+                    !line.startsWith("REMARK 290")
+                )
+                .join("\n")
+            : rawData;
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const $3Dmol = (window as any).$3Dmol;
         const viewer = $3Dmol.createViewer(containerRef.current, {
           backgroundColor: "#0a0f1a",
         });
-        viewer.addModel(pdbData, "pdb");
-        viewer.setStyle({}, { cartoon: { color: "spectrum" } });
-        viewer.zoomTo();
-        viewer.render();
-        viewer.zoom(1.1, 1000);
-        setIsLoading(false);
+
+        try {
+          viewer.addModel(structureData, format);
+
+          if (isLigand) {
+            // Ligands: use stick + sphere for atom visibility
+            viewer.setStyle(
+              {},
+              {
+                stick: { radius: 0.15, colorscheme: "Jmol" },
+                sphere: { scale: 0.25, colorscheme: "Jmol" },
+              }
+            );
+          } else {
+            // Proteins: use cartoon with spectrum coloring
+            viewer.setStyle({}, { cartoon: { color: "spectrum" } });
+          }
+
+          viewer.zoomTo();
+          viewer.render();
+          viewer.zoom(1.1, 1000);
+          setIsLoading(false);
+        } catch (parseErr: unknown) {
+          const msg =
+            parseErr instanceof Error ? parseErr.message : "Parse error";
+          throw new Error(`3D viewer could not parse the structure: ${msg}`);
+        }
       } catch (err: unknown) {
-        if (!cancelled) setError(err instanceof Error ? err.message : "Failed to load viewer");
+        if (!cancelled)
+          setError(
+            err instanceof Error ? err.message : "Failed to load viewer"
+          );
         setIsLoading(false);
       }
     };
 
     init();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [url]);
 
   return (
@@ -115,7 +191,7 @@ function PdbViewer({ url, onClose }: { url: string; onClose: () => void }) {
           <div className="flex items-center gap-2">
             <button onClick={() => downloadFile(url, url.split("/").pop() || "structure.pdb")}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs text-slate-300 hover:text-white hover:bg-white/[0.08] transition-all cursor-pointer">
-              <FontAwesomeIcon icon={faDownload} className="w-3 h-3" /> Download PDB
+              <FontAwesomeIcon icon={faDownload} className="w-3 h-3" /> Download
             </button>
             <button onClick={onClose} className="p-2 rounded-lg hover:bg-white/[0.06] transition-colors cursor-pointer">
               <FontAwesomeIcon icon={faXmark} className="w-5 h-5 text-slate-400" />
